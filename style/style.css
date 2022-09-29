@@ -1,0 +1,53 @@
+header {
+    margin: 25px;
+}
+
+.colHeader {
+    border: 2px solid rgb(57, 74, 128);
+    text-align: center;
+    padding: 25px;
+    color: red;
+}
+
+.colUser {
+    margin-left: 25px;
+    text-align: center;
+    color: red;
+}
+
+a {
+    text-decoration: none;
+}
+
+.rowUser {
+    border: 2px solid rgb(57, 74, 128);
+}
+
+#disconnect {
+    margin-top: 10px;
+    border: 2px solid rgb(57, 74, 128);
+    background: grey;
+    color: lightgray;
+    width: 50%;
+    margin-left: 25%;
+     
+}
+
+.rowTask {
+    margin-top: 25px;
+    margin-left: 25%;
+    margin-right: 25%;
+    height: 4em;
+    border: 2px solid rgb(57, 74, 128);
+}
+
+.task {
+    font-size: large;
+    width: auto;
+}
+
+.finalished {
+    width: 12%;
+    border: 2px solid rgb(57, 74, 128);
+    color: red;
+}
