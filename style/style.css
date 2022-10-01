@@ -83,14 +83,13 @@ a {
 .deleteAll {
     float: left;
     border: 2px solid rgb(57, 74, 128);
-    padding: 10px;
+    padding: 2px;
     background: rgba(255, 0, 0, 0.477);
 }
 
 .newTask {
     float: right;
     border: 2px solid rgb(57, 74, 128);
-    padding: 10px;
 }
 
 button {
