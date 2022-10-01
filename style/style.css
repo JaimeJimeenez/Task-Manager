@@ -1,18 +1,29 @@
-header {
-    margin: 25px;
+.rowHeader {
+    height: 5.2em;
 }
 
-.colHeader {
+.logo {
     border: 2px solid rgb(57, 74, 128);
+    margin-left: 8px;
+    margin-top: 10px;
     text-align: center;
     padding: 25px;
     color: red;
+    height: 4.45em;
 }
 
-.colUser {
-    margin-left: 25px;
-    text-align: center;
+.userImage {
+    margin-top:10px;
+    width: 70%;
+    border: 2px solid rgb(57, 74, 128);
+}
+
+.username {
+    border: 2px solid black;
     color: red;
+    margin-top: 15px;
+    text-align: center;
+    height: 25px;
 }
 
 a {
@@ -21,6 +32,8 @@ a {
 
 .rowUser {
     border: 2px solid rgb(57, 74, 128);
+    height: 2em;
+    margin: 8px;
 }
 
 #disconnect {
@@ -28,9 +41,8 @@ a {
     border: 2px solid rgb(57, 74, 128);
     background: grey;
     color: lightgray;
-    width: 50%;
-    margin-left: 25%;
-     
+    width: 60%;
+    margin-left: 20%;
 }
 
 .rowTask {
@@ -46,8 +58,44 @@ a {
     width: auto;
 }
 
-.finalished {
+.tags {
+    border: 2px solid rgb(57, 74, 128);
+    padding: 8px;
+    border-radius: 10px;
+    margin-left: 12px;
+}
+
+.buttonFin {
+    text-align: center;
     width: 12%;
     border: 2px solid rgb(57, 74, 128);
+    float: right;
+}
+
+.finalished {
     color: red;
+}
+
+.finalished:hover {
+    color: red;
+}
+
+.deleteAll {
+    float: left;
+    border: 2px solid rgb(57, 74, 128);
+    padding: 10px;
+    background: rgba(255, 0, 0, 0.477);
+}
+
+.newTask {
+    float: right;
+    border: 2px solid rgb(57, 74, 128);
+    padding: 10px;
+}
+
+button {
+    border:none;
+    cursor: pointer;
+    text-decoration: none;
+    background-color: rgba(18, 139, 18, 0.492);
 }
