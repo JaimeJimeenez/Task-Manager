@@ -1,5 +1,6 @@
 .rowHeader {
     height: 5.2em;
+    position: sticky;
 }
 
 .logo {
@@ -51,6 +52,10 @@ a {
     margin-right: 25%;
     height: 4em;
     border: 2px solid rgb(57, 74, 128);
+}
+
+.end {
+    text-decoration: line-through;
 }
 
 .task {
