@@ -8,6 +8,14 @@ header {
     position: sticky;
 }
 
+.navbar {
+    border: 2px solid rgba(0, 0, 0, 0.282);
+}
+
+.logoImage {
+    margin-left: 20px;
+}
+
 #user {
     color: red;
     margin-bottom: 10px;
@@ -23,7 +31,6 @@ header {
 
 body {
     background: linear-gradient(to right bottom, #536976, #292E49);
-
 }
 
 .tasksList {
