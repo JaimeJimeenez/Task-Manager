@@ -1,39 +1,38 @@
-.rowHeader {
-    height: 5.2em;
+html {
+    height: 100%;
+}
+
+header {
+    margin-top: 20px;
+    height: 3rem;
     position: sticky;
 }
 
-.logo {
-    border: 2px solid rgb(57, 74, 128);
-    margin-left: 8px;
-    margin-top: 10px;
-    text-align: center;
-    padding: 25px;
+#user {
     color: red;
-    height: 4.45em;
+    margin-bottom: 10px;
+    margin-left: 25px;
+    margin-right: 25px;
+    border: 2px solid rgb(57, 74, 128);
+    padding: 5px;
 }
 
 .userImage {
-    margin-top:10px;
-    border: 2px solid rgb(57, 74, 128);
+    border: 2px solid rgb(57, 74, 128)
 }
 
-.username {
-    border: 2px solid black;
-    color: red;
-    margin-top: 15px;
-    text-align: center;
-    height: 25px;
+body {
+    background: linear-gradient(to right bottom, #536976, #292E49);
+
+}
+
+.tasksList {
+    margin-top: 10rem;
+    height: 100%;
 }
 
 a {
     text-decoration: none;
-}
-
-.rowUser {
-    border: 2px solid rgb(57, 74, 128);
-    height: 2em;
-    margin: 8px;
 }
 
 #disconnect {
@@ -51,6 +50,7 @@ a {
     margin-right: 25%;
     height: 4em;
     border: 2px solid rgb(57, 74, 128);
+    background-color: white;
 }
 
 .end {
@@ -77,10 +77,6 @@ a {
 }
 
 .finalished {
-    color: red;
-}
-
-.finalished:hover {
     color: red;
 }
 

@@ -17,32 +17,27 @@
         <div class = "container-fluid">
 
             <header>
-                <div class = "row rowHeader">
-
-                    <div class = "col-2 logo">
-                        <h6> Logo o texto: Gestor de tareas </h6>
+                <nav class = "navbar navbar-expand-sm navbar-light bg-light">
+                    <a href = "#" class = "navbar-brand">
+                        <img src = "./images/logo.png" alt = "Imagen del logo de la aplicación">
+                    </a>
+                    <div id = "navbarCollapse" class = "collapse navbar-collapse">
+                        <ul class = "nav navbar-nav ms-auto">
+                            <li class = "nav-item">
+                                <img src = "./images/noUser.png" alt = "Imagen de usuario no identificado" class = "rounded-circle userImage">
+                            </li>
+                            <li class = "nav-item">
+                                <div id = "user"> Nombre de usuario</div>
+                                <a href = "#" id = "disconnect"> Desconectar </a>
+                            </li>
+                        </ul>
                     </div>
-                        
-                    <div class = "col-1 offset-4" style = "margin-left: 60%;">
-                        <img src = "./images/noUser.png" class = "userImage" alt = "Imagen de usuario no identificado">
-                    </div>
-
-                    <div class = "col-2" style = "width: 14%;">
-                        <div class = "row align-items-center username"> 
-                            <p> Nombre usuario </p>
-                        </div>
-
-                       <div class = "row align-items-center">
-                        <a href = "#" id = "disconnect"> Desconectar </a>
-                       </div>
-                    </div>
-
-                </div>
+                </nav>
             </header>
             
             <section>
 
-                <ul>
+                <ul class = "tasksList">
 
                     <li class = "row align-items-center rowTask">
                         <span>
@@ -101,7 +96,7 @@
             </section>
 
             <section>
-                 <div class = "row align-items-center rowTask" style = "border: none">
+                 <div class = "row align-items-center rowTask" style = "border: none; background: none;">
                     <span>
                         <span class = "deleteAll">
                         <a href = "#" style = "color: red;"> Eliminar todas</a>
