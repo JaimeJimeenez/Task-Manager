@@ -17,7 +17,7 @@ header {
 }
 
 #user {
-    color: red;
+    color: white;
     margin-bottom: 10px;
     margin-left: 25px;
     margin-right: 25px;
@@ -57,7 +57,12 @@ a {
     margin-right: 25%;
     height: 4em;
     border: 2px solid rgb(57, 74, 128);
-    background-color: white;
+    background-color: rgba(0, 0, 0, 0.207);
+    animation: 10s padding;
+}
+
+.rowTask:hover {
+    padding: 20px;
 }
 
 .end {
@@ -67,6 +72,11 @@ a {
 .task {
     font-size: large;
     width: auto;
+    color: black;
+}
+
+.task:hover {
+    color: blue;
 }
 
 .tags {
@@ -74,6 +84,7 @@ a {
     padding: 8px;
     border-radius: 10px;
     margin-left: 12px;
+    color: white;
 }
 
 .buttonFin {
@@ -83,20 +94,40 @@ a {
     float: right;
 }
 
-.finalished {
-    color: red;
+.buttonFin:hover {
+    background-color: red;
 }
 
-.deleteAll {
+.finalished {
+    color: white;
+}
+
+.finalished:hover {
+    color: black;
+}
+
+#deleteAll {
     float: left;
     border: 2px solid rgb(57, 74, 128);
     padding: 2px;
-    background: rgba(255, 0, 0, 0.477);
+    color: white;
 }
 
-.newTask {
+#deleteAll:hover {
+    background-color: red;
+    color: black;
+}
+
+#newTask {
     float: right;
     border: 2px solid rgb(57, 74, 128);
+    padding: 2px;
+    color: white;
+}
+
+#newTask:hover {
+    background-color: green;
+    color: black;
 }
 
 button {
@@ -104,4 +135,11 @@ button {
     cursor: pointer;
     text-decoration: none;
     background-color: rgba(18, 139, 18, 0.492);
+}
+
+.rowOptions {
+    margin-top: 30px;
+    margin-left: 26%;
+    margin-right: 24%;
+    height: 4em;
 }
