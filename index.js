@@ -8,16 +8,22 @@ let tasksList = [
     { text: "Hablar con el profesor", done: false, tags: [ "universidad", "tp2" ] }
 ];
 
-function getToDoTasks(tasksList) {
-    let unfinalished = tasksList.filter(n => !n.done);
-    console.log(unfinalished.map(n => n.text));
+function getToDoTasks(tasks) {
+    let unfinalished = tasks.filter(n => !n.done);
+    return unfinalished.map(n => n.text);
 }
 
-getToDoTasks(tasksList);
+console.log(getToDoTasks(tasksList));
 
-function findByTag(tasksList, tag) {
-    let tagTasks = tasksList.filter(n => n.tags.some(x => x === tag));
-    console.log(tagTasks);
+function findByTag(tasks, tag) {
+    let tagTasks = tasks.filter(n => n.tags.some(x => x === tag));
+    return tagTasks;
 }
 
-findByTag(tasksList, "personal");
+console.log(findByTag(tasksList, "personal"));
+
+function findByTags(tasks, tag) {
+    let tagTasks = tasks.filter()
+}
+
+//findByTags(tasksList, [ "personal", "practica"]);
