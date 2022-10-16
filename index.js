@@ -12,39 +12,21 @@ function getToDoTasks(tasks) {
     let unfinalished = tasks.filter(n => !n.done);
     return unfinalished.map(n => n.text);
 }
-
 console.log(getToDoTasks(tasksList));
 
-function findByTag(tasks, tag) {
-    let tagTasks = tasks.filter(n => n.tags.some(x => x === tag));
-    return tagTasks;
-}
-
+function findByTag(tasks, tag) { return tasks.filter(n => n.tags.some(x => x === tag)); }
 console.log(findByTag(tasksList, "personal"));
 
-function findByTags(tasks, tag) {
-    let tagTasks = tasks.filter()
-}
-
-//findByTags(tasksList, [ "personal", "practica"]);
-
-function isDone(task) {
-    return task.done;
-}
+function findByTags(tasks, tags) { return tasks.filter(n => tags.some(x => n.tags.includes(x))); }
+console.log(findByTags(tasksList, [ "personal", "practica"]));
 
 function countDone(tasks) {
-    let count = 0;
-    let total = tasks.reduce();
-    
-    return count;
+    return tasks.reduce((count, n) => {
+        if (n.done) count++;
+        return count;
+    }, 0);
 }
-
-//console.log(countDone(tasksList));
-
-function test(n) {
-    if (n.charAt(0) == '@') console.log(n + "Is a tag");
-    else console.log(n + "Is not a tag");
-}
+console.log(countDone(tasksList));
 
 function createTask(input) {
     let array = input.split(' ');
