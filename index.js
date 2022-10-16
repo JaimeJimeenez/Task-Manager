@@ -27,3 +27,42 @@ function findByTags(tasks, tag) {
 }
 
 //findByTags(tasksList, [ "personal", "practica"]);
+
+function isDone(task) {
+    return task.done;
+}
+
+function countDone(tasks) {
+    let count = 0;
+    let total = tasks.reduce();
+    
+    return count;
+}
+
+//console.log(countDone(tasksList));
+
+function test(n) {
+    if (n.charAt(0) == '@') console.log(n + "Is a tag");
+    else console.log(n + "Is not a tag");
+}
+
+function createTask(input) {
+    let array = input.split(' ');
+
+    // Text
+    let text = array.filter(n => n.charAt(0) !== '@');
+    text = text.join(" ");
+
+    // Tags
+    let tags = array.filter(n => n.charAt(0) === '@');
+    tags = tags.map(n => n.slice(1, n.length));
+
+    return {
+        text: text,
+        tags: tags,
+    };
+}
+
+console.log(createTask("Ir al medico @personal @salud"));
+console.log(createTask("@universidad @practica Preparar practicas TP"));
+console.log(createTask("Ir a @deporte entrenar"));
