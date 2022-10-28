@@ -8,6 +8,12 @@ header {
     position: sticky;
 }
 
+#init {
+    border: 2px solid rgba(0, 0, 0, 0.282);
+    margin-left: 0.5%;
+    margin-right: 0.5%;
+}
+
 .navbar {
     border: 2px solid rgba(0, 0, 0, 0.282);
 }
@@ -16,13 +22,14 @@ header {
     margin-left: 20px;
 }
 
-#user {
+#userImage {
+    align-items: center;
+}
+
+#username {
+    margin-top: 5px;
+    text-align: center;
     color: white;
-    margin-bottom: 10px;
-    margin-left: 25px;
-    margin-right: 25px;
-    border: 2px solid rgb(57, 74, 128);
-    padding: 5px;
 }
 
 .userImage {
@@ -43,12 +50,12 @@ a {
 }
 
 #disconnect {
-    margin-top: 10px;
     border: 2px solid rgb(57, 74, 128);
     background: grey;
     color: lightgray;
     width: 60%;
     margin-left: 20%;
+    margin-bottom: 10px;
 }
 
 .rowTask {
@@ -92,6 +99,7 @@ a {
     width: 12%;
     border: 2px solid rgb(57, 74, 128);
     float: right;
+    padding: 5px;
 }
 
 .buttonFin:hover {
