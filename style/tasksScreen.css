@@ -68,10 +68,6 @@ a {
     animation: 10s padding;
 }
 
-.rowTask:hover {
-    padding: 20px;
-}
-
 .end {
     text-decoration: line-through;
 }
