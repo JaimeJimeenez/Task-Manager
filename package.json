@@ -1,0 +1,32 @@
+{
+  "name": "task-manager",
+  "version": "1.0.0",
+  "description": "Task Manager Web Application",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jimmyjimmenez/Task-Manager.git"
+  },
+  "keywords": [
+    "AW",
+    "Task-Manager",
+    "Web",
+    "HTML",
+    "CSS",
+    "JS",
+    "Node",
+    "Express"
+  ],
+  "author": "Jaime Jiménez Nieto, Diego Martinez Moro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jimmyjimmenez/Task-Manager/issues"
+  },
+  "homepage": "https://github.com/Jimmyjimmenez/Task-Manager#readme",
+  "dependencies": {
+    "mysql": "^2.18.1"
+  }
+}

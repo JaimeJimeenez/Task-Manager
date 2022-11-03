@@ -1,11 +1,10 @@
 "use strict"
 
 const mysql = require("mysql");
-const config = require("./config");
-const DAOUsers = require("./DAOUsers");
+const config = require("./config.js");
+const DAOUsers = require("./DAOUsers.js");
 const DAOTasks = require("./DAOTasks");
 
-// Create pool's connection
 const pool = mysql.createPool({
     host: config.host,
     user: config.user,
@@ -13,16 +12,26 @@ const pool = mysql.createPool({
     database: config.database
 });
 
-let daoUser = new DAOUsers(pool);
-let daoTasks = new DAOTasks(pool);
+pool.getConnection(function(err, connection) {
+    if (err) console.log("Error al obtener acceso a la base de datos: " + err.message);
+    else {
+        const query = "SELECT Email, Password FROM Users";
+        connection.query(query, function(err, rows) {
+            connection.release();
+            if (err) console.log("Error al realizar la consulta");
+            else rows.forEach(function(row) {
+                console.log(row.Email + " " + row.Password);
+            });
+        })
+    }
+});
 
-// Callback functions
+let daoUsers = new DAOUsers(pool);
 
 
-// Methods of the DAO's
-daoUser.isUserCorrect("usuario@ucm.es", "mipass", cb_isUserCorrect);
-daoUser.isUserCorrect("aitor.tilla@ucm.es", "aitor", cb_isUserCorrect);
-daoUser.getUserImage("aitor.tilla@ucm.es", cb_getUserImage);
+//DAO User
+daoUsers.isUserCorrect("aitor.tilla@ucm.es", "aitor", cb_isUserCorrect);
+daoUsers.isUserCorrect("usuario@ucm.es", "mipass", cb_isUserCorrect);
 
 function cb_isUserCorrect(err, result) {
     if (err) console.log(err.message);
@@ -30,32 +39,13 @@ function cb_isUserCorrect(err, result) {
     else console.log("Usuario y/o contraseña incorrectos");
 }
 
-function cb_getUserImage(err, result) {
-    if (err) console.log(err.mesage);
-    else console.log("Imagen de usuario: " + result);
-}
+daoUsers.getUserImageName("aitor.tilla@ucm.es", cb_getUserImageName);
+daoUsers.getUserImageName("usuario@ucm.es", cb_getUserImageName);
 
-function cb_getAllTasks(err, result) {
-    if (err) console.log(err.mesage);
-    else console.log(result);
-}
-
-function cb_insertTask(err, result) {
+function cb_getUserImageName(err, result) {
     if (err) console.log(err.message);
-    else console.log("Task inserted");
+    else console.log("Nombre de la imagen del usuario: " + result);
 }
 
-function cb_markTaskDone(err, result) {
-    if (err) console.log(err.message);
-    else console.log("Tasks mark done");
-}
-
-function cb_deleteCompleted(err, result) {
-    if (err) console.log(err.message);
-    else console.log("Tasks completed deleted");
-}
-
-daoTasks.getAllTasks("aitor.tilla@ucm.es", cb_getAllTasks);
-//daoTasks.insertTask()
-daoTasks.markTaskDone(2, cb_markTaskDone);
-daoTasks.deleteCompleted("aitor.tilla@ucm.es", cb_deleteCompleted);
+// DAO Task
+let daoTasks = new DAOTasks(pool);

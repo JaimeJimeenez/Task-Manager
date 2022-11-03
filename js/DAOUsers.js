@@ -2,40 +2,40 @@
 
 class DAOUsers {
 
-    #pool;
-
     constructor(pool) { this.pool = pool; }
 
     isUserCorrect(email, password, callback) {
         this.pool.getConnection(function(err, connection) {
-
-            if (err) callback(new Error("Error de conexión a la base de datos"));
+            if (err) callback(new Error("Error de conexión a la base de datos" + err.message));
             else {
-                connection.query("SELECT * FROM Users WHERE Email = ? AND Password = ?", (email, password)),
-                function(err, rows) {
-                    connection.release(); // Get back the connection to the pool
+                const sql = "SELECT * FROM Users WHERE Email = ? AND Password = ?";
 
-                    if (err) callback(new Error("Error de acceso a la base de datos"));
-                    else if (rows.length === 0) callback(null, false);
+                connection.query(sql, [email, password], function(err, rows) {
+                    connection.release();
+                    if (err) callback(new Error("Error en la consulta"));
+                    else{
+                        if (rows.length === 0) callback(null, false);
                         else callback(null, true);
-                }
+                    } 
+                });
             }
         });
     }
 
-    getUserImage(email, callback) {
+    getUserImageName(email, callback) {
         this.pool.getConnection(function(err, connection) {
-            if (err) callback(new Error("Error de conexión a la base de datos"));
+            if (err) callback(new Error("Error de conexión a la base de datos" + err.message));
             else {
-                connection.query("SELECT * FROM Users WHERE Email = ?", (email)),
-                function(err, rows) {
-                    connection.release(); // Get back the connection to the pool
+                const sql = "SELECT Img FROM Users WHERE Email = ?";
 
-                    if (err) callback(new Error("Error de acceso a la base de datos"));
+                connection.query(sql, [email], function(err, row) {
+                    connection.release();
+                    if (err) callback(new Error("Error en la consulta"));
                     else {
-
+                        if (row.length === 0) callback(new Error("No existe ese usuario"));
+                        else callback(row);
                     }
-                }
+                });
             }
         });
     }
