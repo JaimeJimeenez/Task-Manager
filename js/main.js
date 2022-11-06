@@ -12,26 +12,12 @@ const pool = mysql.createPool({
     database: config.database
 });
 
-pool.getConnection(function(err, connection) {
-    if (err) console.log("Error al obtener acceso a la base de datos: " + err.message);
-    else {
-        const query = "SELECT Email, Password FROM Users";
-        connection.query(query, function(err, rows) {
-            connection.release();
-            if (err) console.log("Error al realizar la consulta");
-            else rows.forEach(function(row) {
-                console.log(row.Email + " " + row.Password);
-            });
-        })
-    }
-});
-
 let daoUsers = new DAOUsers(pool);
-
+let daoTasks = new DAOTasks(pool);
 
 //DAO User
-daoUsers.isUserCorrect("aitor.tilla@ucm.es", "aitor", cb_isUserCorrect);
-daoUsers.isUserCorrect("usuario@ucm.es", "mipass", cb_isUserCorrect);
+//daoUsers.isUserCorrect("aitor.tilla@ucm.es", "aitor", cb_isUserCorrect);
+//daoUsers.isUserCorrect("usuario@ucm.es", "mipass", cb_isUserCorrect);
 
 function cb_isUserCorrect(err, result) {
     if (err) console.log(err.message);
@@ -39,8 +25,8 @@ function cb_isUserCorrect(err, result) {
     else console.log("Usuario y/o contraseña incorrectos");
 }
 
-daoUsers.getUserImageName("aitor.tilla@ucm.es", cb_getUserImageName);
-daoUsers.getUserImageName("usuario@ucm.es", cb_getUserImageName);
+//daoUsers.getUserImageName("aitor.tilla@ucm.es", cb_getUserImageName);
+//daoUsers.getUserImageName("usuario@ucm.es", cb_getUserImageName);
 
 function cb_getUserImageName(err, result) {
     if (err) console.log(err.message);
@@ -48,4 +34,38 @@ function cb_getUserImageName(err, result) {
 }
 
 // DAO Task
-let daoTasks = new DAOTasks(pool);
+//daoTasks.getAllTasks("aitor.tilla@ucm.es", cb_getAllTasks);
+
+function cb_getAllTasks(err, result) {
+    if (err) console.log(err.message);
+    else if (result) console.log("Todo ok");
+    else console.log("Todo mal");
+}
+
+let task = {
+    text: "Lavar la ropa",
+    done: false,
+    tags: ["Personal", "Casa"]
+}
+
+
+//daoTasks.insertTask("aitor.tilla@ucm.es", task, cb_getAllTasks);
+
+function cb_insertTask(err, result) {
+    if (err) console.log(err.message);
+    else console.log("Tarea insertada");
+}
+
+//daoTasks.markTaskDone(1, cb_markTaskDone);
+
+function cb_markTaskDone(err) {
+    if (err) console.log(err.message);
+    else console.log("Tarea marcada como hecha");
+}
+
+daoTasks.deleteCompleted("aitor.tilla@ucm.es", cb_deleteCompleted);
+
+function cb_deleteCompleted(err) {
+    if (err) console.log(err.message);
+    else console.log("Tarea eliminada");
+}

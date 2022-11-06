@@ -9,16 +9,18 @@ class DAOTasks {
     getAllTasks(email, callback) {
         this.pool.getConnection(function(err, connection) {
 
-            if (err) callback(new Error("Error de conexión a la base de datos"));
+            if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
             else {
-                connection.query("SELECT Id FROM Users WHERE Email = ?" (email)),
+                const sql = "SELECT t.Id, t.Text, ut.Done FROM Users JOIN UsersTasks ut ON Id = ut.IdUser JOIN Tasks t ON ut.IdTask = t.Id WHERE email = ?";
+
+                connection.query(sql, [email],
                 function(err, rows) {
                     connection.release(); // Get back the connection to the pool
 
                     if (err) callback(new Error("Error de acceso a la base de datos"));
                     else if (rows.length === 0) callback(null, false);
                         else callback(null, true);
-                }
+                });
             }
         });
     }
@@ -28,10 +30,10 @@ class DAOTasks {
 
             if (err) callback(new Error("Error de conexión a la base de datos"));
             else {
-                connection.query("INSERT INTO UsersTasks VALUES task.Done WHERE User.email = ? AND User.Id = UsersTasks.IdUser" (email),
-                function(err, rows) {
-                    connection.release();
-                })
+                let text = task.text;
+                let done = task.done;
+                let tags = task.tags;
+                console.log(text + " " + done + " " + tags);
             }
         })
     }
@@ -39,13 +41,14 @@ class DAOTasks {
     markTaskDone(idTask, callback) {
         this.pool.getConnection(function(err, connection) {
 
-            if (err) callback(new Error("Error de conexión en la base de datos"));
+            if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
             else {
-                connection.query("UPDATE TABLE Tasks VALUES Done = true WHERE Id = ?", (idTask)),
-                function(err, rows) {
+                const sql = "UPDATE UsersTasks SET Done = 1 WHERE IdTask = ?";
+                connection.query(sql, [idTask], function(err, rows){
                     connection.release();
-                    if (err) callback(new Error("Error de acceso a la base de datos"));
-                }
+                    if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
+                    else callback(null);
+                });
             }
 
         });
@@ -56,16 +59,17 @@ class DAOTasks {
             
             if (err) callback(new Error("Error de conexión en la base de datos"));
             else {
-                connection.query("DELETE FROM UsersTasks WHERE Users.Id = UsersTasks.IdUser AND User.email = ? AND UsersTasks.Done = true", (email)),
-                function(err, rows) {
+                const sql = "DELETE FROM UsersTasks WHERE EXISTS ( SELECT * FROM Users WHERE UsersTasks.IdUser = Id AND Email = ? AND UsersTasks.Done = 1) ";
+
+                connection.query(sql, [email], function(err, rows) {
                     connection.release();
-                    if (err) callback(new Error("Error de acceso a la base de datos"));
-                }
+
+                    if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
+                    else callback(null);
+                })
             }
         })
     }
 }
 
 module.exports = DAOTasks;
-
-//Si peta cambiar las mayusculas

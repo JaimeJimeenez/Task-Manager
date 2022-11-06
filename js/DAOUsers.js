@@ -13,7 +13,7 @@ class DAOUsers {
                 connection.query(sql, [email, password], function(err, rows) {
                     connection.release();
                     if (err) callback(new Error("Error en la consulta"));
-                    else{
+                    else {
                         if (rows.length === 0) callback(null, false);
                         else callback(null, true);
                     } 
