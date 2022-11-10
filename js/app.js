@@ -42,12 +42,12 @@ function cb_getAllTasks(err, result) {
 }
 
 let task = {
-    text: "Lavar la ropa",
+    text: "Morirse en un rato",
     done: false,
-    tags: [1, 2]
+    tags: ["Weba", "Epp"]
 }
 
-//daoTasks.insertTask("aitor.tilla@ucm.es", task, cb_insertTask);
+daoTasks.insertTask("aitor.tilla@ucm.es", task, cb_insertTask);
 
 function cb_insertTask(err, result) {
     if (err) console.log(err.message);
