@@ -42,9 +42,9 @@ function cb_getAllTasks(err, result) {
 }
 
 let task = {
-    text: "Morirse en un rato",
+    text: "Ver el baloncesto",
     done: false,
-    tags: ["Weba", "Epp"]
+    tags: ["Hobby", "Futbol"]
 }
 
 daoTasks.insertTask("aitor.tilla@ucm.es", task, cb_insertTask);

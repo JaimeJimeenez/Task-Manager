@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 09-11-2022 a las 11:14:45
+-- Tiempo de generación: 10-11-2022 a las 18:18:05
 -- Versión del servidor: 10.4.21-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -66,7 +66,7 @@ INSERT INTO `Tasks` (`Id`, `Text`) VALUES
 (2, 'Mirar fechas congreso'),
 (3, 'Ir al supermercado'),
 (4, 'Jugar al fútbol'),
-(5, 'Hablar con el profesor'),
+(5, 'Hablar con el profesor');
 
 -- --------------------------------------------------------
 
