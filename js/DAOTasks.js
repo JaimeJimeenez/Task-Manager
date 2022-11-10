@@ -1,41 +1,77 @@
 "use strict"
 
+let DAOUsers = require("./DAOUsers");
+
 class DAOTasks {
-    
-    #pool;
 
     constructor(pool) { this.pool = pool; }
 
     getAllTasks(email, callback) {
+
+    }
+
+    getTaskByText(text, callback) {
         this.pool.getConnection(function(err, connection) {
-
-            if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
+            if (err) callback("Error de conexión a la base de datos: " + err.message);
             else {
-                const sql = "SELECT t.Id, t.Text, ut.Done FROM Users JOIN UsersTasks ut ON Id = ut.IdUser JOIN Tasks t ON ut.IdTask = t.Id WHERE email = ?";
+                const sql = "SELECT * FROM Tasks WHERE Text = ?";
 
-                connection.query(sql, [email],
-                function(err, rows) {
-                    connection.release(); // Get back the connection to the pool
+                connection.query(sql, [text], (err, rows) => {
+                    connection.release();
 
                     if (err) callback(new Error("Error de acceso a la base de datos"));
-                    else if (rows.length === 0) callback(null, false);
-                        else callback(null, true);
+                    else callback(null, rows[0]);
                 });
             }
-        });
+        })
     }
 
     insertTask(email, task, callback) {
-        this.pool.getConnection(function(err, connection) {
-
-            if (err) callback(new Error("Error de conexión a la base de datos"));
+        this.pool.getConnection((err, connection) => {
+            if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
             else {
-                let text = task.text;
-                let done = task.done;
-                let tags = task.tags;
-                console.log(text + " " + done + " " + tags);
+                let daoUsers = new DAOUsers(this.pool);
+                let idUser, idTask, sql;
+
+                daoUsers.getUserByEmail(email, (err, user) => {
+                    if (err) callback(err);
+                    else {
+                        idUser = user.Id; // Assuming that the user exists
+                        
+                        this.getTaskByText(task.text, (err, result) => {
+                            if (err) callback(err);
+                            else {
+                                if (result === undefined) {
+                                    sql = "INSERT INTO Tasks (Text) VALUE (?)";
+
+                                    connection.query(sql, [task.text], (err, row) => {
+                                        if (err) callback(new Error("Error de acceso a la base de datos" + err.message));
+                                        else idTask = row.insertId;
+                                    });
+                                }
+                                else idTask = result.Id;
+                            }
+
+                            sql = "INSERT INTO UsersTasks (IdUser, IdTask, Done) VALUES (?, ?, ?)";
+
+                            connection.query(sql, [idUser, idTask, task.done], (err, row) => {
+                                if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
+                                else callback(null);
+                            });
+
+                            sql = "INSERT INTO TasksTags (IdTask, IdTag) VALUES (?, ?)";
+
+                            task.tags.forEach(tag => {
+                                connection.query(sql, [idTask, tag], (err, row) => {
+                                    if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
+                                });
+                            });
+                        });
+                    }
+                    connection.release();
+                });
             }
-        })
+        });
     }
 
     markTaskDone(idTask, callback) {
@@ -66,9 +102,9 @@ class DAOTasks {
 
                     if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
                     else callback(null);
-                })
+                });
             }
-        })
+        });
     }
 }
 
