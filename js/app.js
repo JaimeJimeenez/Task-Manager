@@ -61,7 +61,7 @@ function cb_markTaskDone(err) {
     else console.log("Tareas marcadas como hecha");
 }
 
-daoTasks.deleteCompleted("aitor.tilla@ucm.es", cb_deleteCompleted);
+//daoTasks.deleteCompleted("aitor.tilla@ucm.es", cb_deleteCompleted);
 
 function cb_deleteCompleted(err) {
     if (err) console.log(err.message);

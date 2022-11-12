@@ -10,14 +10,13 @@ class DAOTasks {
         this.pool.getConnection((err, connection) => {
             if (err) callback("Error de conexión a la base de datos: " + err.message);
             else {
-                let idUser;
                 let daoUsers = new DAOUsers(this.pool);
                 
                 daoUsers.getUserByEmail(email, (err, user) => {
                     if (err) callback(err);
                     else {
-                        idUser = user.Id;
-                        const sql = "SELECT IdUser, Tasks.Id, Done, Tasks.Text, Tags.Text AS Etiquetas FROM UsersTasks JOIN Tasks ON Tasks.Id = UsersTasks.IdTask JOIN TasksTags ON TasksTags.IdTask = UsersTasks.IdTask JOIN Tags ON Tags.Id = TasksTags.IdTag WHERE IdUser = ?;";
+                        let idUser = user.Id;
+                        const sql = "SELECT Tasks.Id, Done, Tasks.Text, Tags.Text AS Tags FROM UsersTasks JOIN Tasks ON Tasks.Id = UsersTasks.IdTask JOIN TasksTags ON TasksTags.IdTask = UsersTasks.IdTask JOIN Tags ON Tags.Id = TasksTags.IdTag WHERE IdUser = ?;";
                         
                         connection.query(sql, [idUser], (err, rows) => {
                             connection.release();
