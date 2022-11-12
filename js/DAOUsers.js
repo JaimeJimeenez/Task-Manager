@@ -13,7 +13,6 @@ class DAOUsers {
 
                 connection.query(sql, [email], (err, rows) => {
                     connection.release();
-
                     if (err) callback("Error de acceso a la base de datos: " + err.message);
                     else callback(null, rows[0]);
                 });
@@ -31,6 +30,21 @@ class DAOUsers {
                     connection.release();
                     if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
                     else callback(null, result[0]);
+                });
+            }
+        });
+    }
+
+    getTasksDone(email, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
+            else {
+                const sql = "SELECT IdTask FROM UsersTasks JOIN Users ON Users.Id = UsersTasks.IdUser AND Users.Email = ? WHERE Done = 1;"
+
+                connection.query(sql, [email], (err, tasks) => {
+                    connection.release();
+                    if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
+                    else callback(null, tasks);
                 });
             }
         });
@@ -61,6 +75,7 @@ class DAOUsers {
                 const sql = "INSERT INTO UsersTasks (IdUser, IdTask, Done) SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM UsersTasks WHERE IdUser = ? AND IdTask = ?)"
 
                 connection.query(sql, [idUser, idTask, done, idUser, idTask], (err, row) => {
+                    connection.release();
                     if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
                     else callback(null, row);
                 })
@@ -77,10 +92,8 @@ class DAOUsers {
                 connection.query(sql, [email], function(err, row) {
                     connection.release();
                     if (err) callback(new Error("Error en la consulta"));
-                    else {
-                        if (row.length === 0) callback(new Error("No existe ese usuario"));
-                        else callback(row);
-                    }
+                    else if (row.length === 0) callback(new Error("No existe ese usuario"));
+                    else callback(row);
                 });
             }
         });

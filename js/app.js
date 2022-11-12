@@ -44,24 +44,24 @@ function cb_getAllTasks(err, result) {
 let task = {
     text: "Comer pizza",
     done: false,
-    tags: ["Comida", "Arroz"]
+    tags: ["Comida", "Pizzería"]
 }
 
-daoTasks.insertTask("felipe.lotas@ucm.es", task, cb_insertTask);
+//daoTasks.insertTask("aitor.tilla@ucm.es", task, cb_insertTask);
 
 function cb_insertTask(err, result) {
     if (err) console.log(err.message);
     else console.log("Tarea insertada");
 }
 
-//daoTasks.markTaskDone(1, cb_markTaskDone);
+//daoTasks.markTaskDone(9, cb_markTaskDone);
 
 function cb_markTaskDone(err) {
     if (err) console.log(err.message);
     else console.log("Tarea marcada como hecha");
 }
 
-//daoTasks.deleteCompleted("aitor.tilla@ucm.es", cb_deleteCompleted);
+daoTasks.deleteCompleted("aitor.tilla@ucm.es", cb_deleteCompleted);
 
 function cb_deleteCompleted(err) {
     if (err) console.log(err.message);

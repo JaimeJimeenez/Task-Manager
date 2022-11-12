@@ -53,8 +53,24 @@ class DAOTasks {
                 const sql = "SELECT * FROM Tags WHERE Text = ?;"
 
                 connection.query(sql, [text], (err, tag) => {
+                    connection.release();
                     if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
                     else callback(null, tag[0]);
+                });
+            }
+        });
+    }
+
+    getTagsByTask(idTask, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
+            else {
+                const sql = "SELECT IdTag FROM TasksTags WHERE IdTask = ?;"
+
+                connection.query(sql, [idTask], (err, tags) => {
+                    connection.release();
+                    if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
+                    else callback(null, tags);
                 });
             }
         });
@@ -67,6 +83,7 @@ class DAOTasks {
                 const sql = "INSERT INTO Tasks (Text) SELECT ? WHERE NOT EXISTS (SELECT 1 FROM Tasks WHERE Text = ?);";
 
                 connection.query(sql, [text, text], (err, task) => {
+                    connection.release();
                     if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
                     else callback(null, task);
                 });
@@ -81,6 +98,7 @@ class DAOTasks {
                 const sql = "INSERT INTO TasksTags (IdTask, IdTag) SELECT ?, ? WHERE NOT EXISTS (SELECT 1 FROM TasksTags WHERE IdTask = ? AND IdTag = ?);"
 
                 connection.query(sql, [idTask, idTag, idTask, idTag], (err) => {
+                    connection.release();
                     if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
                     else callback(null);
                 });
@@ -95,6 +113,7 @@ class DAOTasks {
                 const sql = "INSERT INTO Tags (Text) SELECT ? WHERE NOT EXISTS (SELECT 1 FROM Tags WHERE Text = ?);"
 
                 connection.query(sql, [text, text], (err, tag) => {
+                    connection.release();
                     if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
                     else callback(null, tag);
                 });
@@ -136,12 +155,12 @@ class DAOTasks {
 
                                                         this.insertTaskTag(idTask, idTag, (err) => {
                                                             if (err) callback(err);
-                                                            else callback(null);
                                                         });
                                                     }
                                                 });
                                             });
                                         });                            
+                                        callback(null);
                                     }
                                 }); 
                             }
@@ -168,17 +187,98 @@ class DAOTasks {
         });
     }
 
-    deleteCompleted(email, callback) {
-        this.pool.getConnection(function(err, connection) {
-            
-            if (err) callback(new Error("Error de conexión en la base de datos"));
+    countTags(idTag, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) callback(new Error("Error de conexión en la base de datos: " + err.message));
             else {
-                const sql = "DELETE FROM UsersTasks WHERE EXISTS ( SELECT * FROM Users WHERE UsersTasks.IdUser = Id AND Email = ? AND UsersTasks.Done = 1) ";
+                const sql = "SELECT COUNT(*) FROM TasksTags WHERE IdTag = ?;";
+                
+                connection.query(sql, [idTag], (err, count) => {
+                    connection.release();
+                    if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
+                    else callback(null, count[0]);
+                });
+            }
+        });
+    }
 
-                connection.query(sql, [email], function(err, rows) {
+    deleteTag(idTag, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
+            else {
+                const sql = "DELETE FROM Tags WHERE IdTag = ?;";
+
+                connection.query(sql, [idTag], (err) => {
                     connection.release();
                     if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
                     else callback(null);
+                });
+            }
+        });
+    }
+
+    deleteTaskTag(idTag, idTask, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
+            else {
+                const sql = "DELETE FROM TasksTags WHERE IdTask = ? AND IdTag = ?;"
+
+                connection.query(sql, [idTag, idTask], (err) => {
+                    connection.release();
+                    if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
+                    else callback(null);
+                });
+            }
+        });
+    }
+
+    deleteCompleted(email, callback) {
+        this.pool.getConnection((err, connection) => {
+            
+            if (err) callback(new Error("Error de conexión en la base de datos"));
+            else {
+                let daoUsers = new DAOUsers(this.pool);
+
+                daoUsers.getTasksDone(email, (err, tasks) => {
+                    if (err) callback(err);
+                    else {
+                        tasks.forEach(task => {
+                            let idTask = task.IdTask;
+
+                            this.getTagsByTask(idTask, (err, tags) => {
+                                if (err) callback(err);
+                                else tags.forEach(tag => {
+                                    //Ok
+                                    let idTag = tag.IdTag;
+
+                                    this.countTags(idTag, (err, result) => {
+                                        if (err) callback(err);
+                                        else {
+                                            let count = result['COUNT(*)'];
+                                            console.log(count);
+                                            if (count === 1) {
+                                                this.deleteTaskTag(idTag, (err) => {
+                                                    if (err) callback(err);
+                                                });
+                                                this.deleteTag(idTag, (err) => {
+                                                    if (err) callback(err);
+                                                });
+                                            } 
+                                        }
+                                    });
+
+                                });
+                            });
+
+                            const sql = "DELETE FROM UsersTasks WHERE EXISTS ( SELECT * FROM Users WHERE UsersTasks.IdUser = Id AND Email = ? AND UsersTasks.Done = 1) ";
+
+                            connection.query(sql, [email], function(err, rows) {
+                                connection.release();
+                                if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
+                                else callback(null);
+                            });
+                        });
+                    }
                 });
             }
         });
