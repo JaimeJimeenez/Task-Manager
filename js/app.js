@@ -42,12 +42,12 @@ function cb_getAllTasks(err, result) {
 }
 
 let task = {
-    text: "Ver el baloncesto",
+    text: "Comer pizza",
     done: false,
-    tags: ["Hobby", "Futbol"]
+    tags: ["Comida", "Arroz"]
 }
 
-daoTasks.insertTask("aitor.tilla@ucm.es", task, cb_insertTask);
+daoTasks.insertTask("felipe.lotas@ucm.es", task, cb_insertTask);
 
 function cb_insertTask(err, result) {
     if (err) console.log(err.message);

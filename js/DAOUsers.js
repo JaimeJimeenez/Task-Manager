@@ -21,6 +21,21 @@ class DAOUsers {
         });
     }
 
+    getUserTask(idUser, idTask, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) callback("Error de conexión a la base de datos: " + err.message);
+            else {
+                const sql = "SELECT * FROM UsersTasks WHERE IdUser = ? AND IdTask = ?;";
+
+                connection.query(sql, [idUser, idTask], (err, result) => {
+                    connection.release();
+                    if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
+                    else callback(null, result[0]);
+                });
+            }
+        });
+    }
+
     isUserCorrect(email, password, callback) {
         this.pool.getConnection(function(err, connection) {
 
@@ -34,6 +49,21 @@ class DAOUsers {
                     else if (rows.length === 0) callback(null, false);
                     else callback(null, true);
                 });
+            }
+        });
+    }
+
+    insertTask(idUser, idTask, done, callback) {
+        this.pool.getConnection((err, connection) => {
+
+            if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
+            else {
+                const sql = "INSERT INTO UsersTasks (IdUser, IdTask, Done) SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM UsersTasks WHERE IdUser = ? AND IdTask = ?)"
+
+                connection.query(sql, [idUser, idTask, done, idUser, idTask], (err, row) => {
+                    if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
+                    else callback(null, row);
+                })
             }
         });
     }

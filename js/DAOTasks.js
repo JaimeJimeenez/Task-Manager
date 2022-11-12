@@ -18,42 +18,85 @@ class DAOTasks {
                     else {
                         idUser = user.Id;
                         const sql = "SELECT IdUser, Tasks.Id, Done, Tasks.Text, Tags.Text AS Etiquetas FROM UsersTasks JOIN Tasks ON Tasks.Id = UsersTasks.IdTask JOIN TasksTags ON TasksTags.IdTask = UsersTasks.IdTask JOIN Tags ON Tags.Id = TasksTags.IdTag WHERE IdUser = ?;";
+                        
                         connection.query(sql, [idUser], (err, rows) => {
                             connection.release();
                             if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
                             else callback(null, rows);
                         });
+
                     } 
                 });
             }
         });
     }
 
-    getTaskByText(text, callback) {
+    getTask(text, callback) {
         this.pool.getConnection(function(err, connection) {
             if (err) callback("Error de conexión a la base de datos: " + err.message);
             else {
                 const sql = "SELECT * FROM Tasks WHERE Text = ?;";
 
-                connection.query(sql, [text], (err, rows) => {
+                connection.query(sql, [text], (err, task) => {
                     connection.release();
                     if (err) callback(new Error("Error de acceso a la base de datos"));
-                    else callback(null, rows[0]);
+                    else callback(null, task[0]);
                 });
             }
         });
     }
 
-    getUserTask(idUser, idTask, callback) {
+    getTag(text, callback) {
         this.pool.getConnection((err, connection) => {
-            if (err) callback("Error de conexión a la base de datos: " + err.message);
+            if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
             else {
-                const sql = "SELECT * FROM UsersTasks WHERE IdUser = ? AND IdTask = ?;";
+                const sql = "SELECT * FROM Tags WHERE Text = ?;"
 
-                connection.query(sql, [idUser, idTask], (err, result) => {
-                    connection.release();
+                connection.query(sql, [text], (err, tag) => {
                     if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
-                    else callback(null, result[0]);
+                    else callback(null, tag[0]);
+                });
+            }
+        });
+    }
+
+    insertTaskIfNotExists(text, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
+            else {
+                const sql = "INSERT INTO Tasks (Text) SELECT ? WHERE NOT EXISTS (SELECT 1 FROM Tasks WHERE Text = ?);";
+
+                connection.query(sql, [text, text], (err, task) => {
+                    if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
+                    else callback(null, task);
+                });
+            }
+        });
+    }
+
+    insertTaskTag(idTask, idTag, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
+            else {
+                const sql = "INSERT INTO TasksTags (IdTask, IdTag) SELECT ?, ? WHERE NOT EXISTS (SELECT 1 FROM TasksTags WHERE IdTask = ? AND IdTag = ?);"
+
+                connection.query(sql, [idTask, idTag, idTask, idTag], (err) => {
+                    if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
+                    else callback(null);
+                });
+            }
+        });
+    }
+
+    insertTag(text, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
+            else {
+                const sql = "INSERT INTO Tags (Text) SELECT ? WHERE NOT EXISTS (SELECT 1 FROM Tags WHERE Text = ?);"
+
+                connection.query(sql, [text, text], (err, tag) => {
+                    if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
+                    else callback(null, tag);
                 });
             }
         });
@@ -61,121 +104,49 @@ class DAOTasks {
 
     insertTask(email, task, callback) {
         this.pool.getConnection((err, connection) => {
+
             if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
             else {
                 let daoUsers = new DAOUsers(this.pool);
-                let idUser, idTask, idTag, sql;
 
                 daoUsers.getUserByEmail(email, (err, user) => {
                     if (err) callback(err);
                     else {
-                        idUser = user.Id; // Assuming that the user exists
+                        let idUser = user.Id;
                         
-                        this.getTaskByText(task.text, (err, result) => {
-                            if (err) callback(err);
-                            else if (result === undefined) {
-                                sql = "INSERT INTO Tasks (Text) VALUE (?);";
-
-                                connection.query(sql, [task.text], (err, result) => {
-                                    connection.release();
-                                    if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
-                                    else callback(null);
-                                });
-                            }
-                        });
-
-                        this.getTaskByText(task.text, (err, result) => {
+                        this.insertTaskIfNotExists(task.text, (err, result) => {
                             if (err) callback(err);
                             else {
-                                console.log(result);
-                                idTask = result.Id;
-
-                                this.getUserTask(idUser, idTask, (err, result) => {
-                                    console.log(result);
+                                this.getTask(task.text, (err, row) => {
                                     if (err) callback(err);
-                                    else if (result === undefined) {
-                                        sql = "INSERT INTO UsersTasks (IdUser, IdTask, Done) VALUES (?, ?, ?);";
+                                    else {
+                                        let idTask = row.Id;
 
-                                        connection.query(sql, [idUser, idTask, task.done], (err, row) => {
-                                            connection.release();
-                                            if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
-                                            else callback(null);
-                                        });
-                                    }
-                                });
-
-                                task.tags.forEach(tag => {
-                                    this.getTagByText(tag, (err, row) => {
-                                        if (err) callback(err);
-                                        else if (row === undefined) {
-                                            sql = "INSERT INTO Tags (Text) VALUE (?);";
-
-                                            connection.query(sql, [tag], (err, result) => {
-                                                connection.release();
-                                                if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
-                                                else idTag = result.insertId;
-                                            });
-                                        }
-                                        else idTag = row.Id;
-
-                                        this.getTagsByTask(idTask, (err, rows) => {
+                                        daoUsers.insertTask(idUser, idTask, task.done, (err, row) => {
                                             if (err) callback(err);
-                                            else {
-                                                rows.forEach(row => {
-                                                    sql = "SELECT * FROM TasksTags WHERE IdTask = ? AND IdTag = ?;";
-
-                                                    connection.query(sql, [idTask, idTag], (err, result) => {
-                                                        connection.release();
-                                                        if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
-                                                        else if (result === undefined) {
-                                                            sql = "INSERT INTO TasksTags (IdTask, IdTag) VALUES (?, ?);"
-
-                                                            connection.query(sql, [idTask, idTag], (err, result) => {
-                                                                connection.release();
-                                                                if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
-                                                                else callback(null);
-                                                            });
-                                                        }
-                                                    });
-                                                });
-                                            }
                                         });
-                                    });
-                                });
-                            } 
+
+                                        task.tags.forEach(tag => {
+                                            this.insertTag(tag, (err) => {
+                                                if (err) callback(err);
+                                                else this.getTag(tag, (err, row) => {
+                                                    if (err) callback(err);
+                                                    else {
+                                                        let idTag = row.Id;
+
+                                                        this.insertTaskTag(idTask, idTag, (err) => {
+                                                            if (err) callback(err);
+                                                            else callback(null);
+                                                        });
+                                                    }
+                                                });
+                                            });
+                                        });                            
+                                    }
+                                }); 
+                            }
                         });
                     }
-                });
-            }
-        });   
-    }
-
-    getTagsByTask(idTask, callback) {
-        this.pool.getConnection((err, connection) => {
-            if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
-            else {
-                //console.log(idTask);
-                const sql = "SELECT * FROM TasksTags WHERE IdTask = ?";
-
-                connection.query(sql, [idTask], (err, tags) => {
-                    connection.release();
-                    if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
-                    else callback(null, tags);
-                });
-            }
-        });
-    }
-
-    getTagByText(text, callback) {
-        this.pool.getConnection((err, connection) => {
-            if (err) callback(new Error("Error de conexión a la base de datos"));
-            else {
-                const sql = "SELECT * FROM Tags WHERE Text = ?";
-
-                connection.query(sql, [text], (err, tag) => {
-                    connection.release();
-                    if (err) callback(new Error("Error de acceso a la base de datos"));
-                    else callback(null, tag[0]);
                 });
             }
         });
