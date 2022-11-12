@@ -34,7 +34,7 @@ function cb_getUserImageName(err, result) {
 }
 
 // DAO Task
-//daoTasks.getAllTasks("aitor.tilla@ucm.es", cb_getAllTasks);
+daoTasks.getAllTasks("aitor.tilla@ucm.es", cb_getAllTasks);
 
 function cb_getAllTasks(err, result) {
     if (err) console.log(err.message);
@@ -42,9 +42,9 @@ function cb_getAllTasks(err, result) {
 }
 
 let task = {
-    text: "Comer pizza",
+    text: "Comer carne",
     done: false,
-    tags: ["Comida", "Pizzería"]
+    tags: ["Comida", "Carne"]
 }
 
 //daoTasks.insertTask("aitor.tilla@ucm.es", task, cb_insertTask);
@@ -58,12 +58,12 @@ function cb_insertTask(err, result) {
 
 function cb_markTaskDone(err) {
     if (err) console.log(err.message);
-    else console.log("Tarea marcada como hecha");
+    else console.log("Tareas marcadas como hecha");
 }
 
 daoTasks.deleteCompleted("aitor.tilla@ucm.es", cb_deleteCompleted);
 
 function cb_deleteCompleted(err) {
     if (err) console.log(err.message);
-    else console.log("Tarea eliminada");
+    else console.log("Tareas eliminadas");
 }

@@ -202,11 +202,25 @@ class DAOTasks {
         });
     }
 
+    countTasks(idTask, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
+            else {
+                const sql = "SELECT COUNT(*) FROM UsersTasks WHERE IdTask = ?;";
+
+                connection.query(sql, [idTask], (err, count) => {
+                    if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
+                    else callback(null, count[0]);
+                });
+            }
+        });
+    }
+
     deleteTag(idTag, callback) {
         this.pool.getConnection((err, connection) => {
             if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
             else {
-                const sql = "DELETE FROM Tags WHERE IdTag = ?;";
+                const sql = "DELETE FROM Tags WHERE Id = ?;";
 
                 connection.query(sql, [idTag], (err) => {
                     connection.release();
@@ -217,14 +231,28 @@ class DAOTasks {
         });
     }
 
-    deleteTaskTag(idTag, idTask, callback) {
+    deleteTaskTag(idTask, idTag, callback) {
         this.pool.getConnection((err, connection) => {
             if (err) callback(new Error("Error de conexión a la base de datos: " + err.message));
             else {
                 const sql = "DELETE FROM TasksTags WHERE IdTask = ? AND IdTag = ?;"
 
-                connection.query(sql, [idTag, idTask], (err) => {
+                connection.query(sql, [idTask, idTag], (err) => {
                     connection.release();
+                    if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
+                    else callback(null);
+                });
+            }
+        });
+    }
+
+    deleteTask(idTask, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) callback(new Error("Error de conexión en la base de datos: " + err.message));
+            else {
+                const sql = "DELETE FROM Tasks WHERE Id = ?;";
+
+                connection.query(sql, [idTask], (err) => {
                     if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
                     else callback(null);
                 });
@@ -239,45 +267,62 @@ class DAOTasks {
             else {
                 let daoUsers = new DAOUsers(this.pool);
 
-                daoUsers.getTasksDone(email, (err, tasks) => {
+                daoUsers.getUserByEmail(email, (err, user) => {
                     if (err) callback(err);
                     else {
-                        tasks.forEach(task => {
-                            let idTask = task.IdTask;
+                        let idUser = user.Id;
 
-                            this.getTagsByTask(idTask, (err, tags) => {
-                                if (err) callback(err);
-                                else tags.forEach(tag => {
-                                    //Ok
-                                    let idTag = tag.IdTag;
+                        daoUsers.getTasksDone(idUser, (err, tasks) => {
+                            if (err) callback(err);
+                            else {
 
-                                    this.countTags(idTag, (err, result) => {
+                                tasks.forEach(task => {
+                                    let idTask = task.IdTask;
+
+                                    this.countTasks(idTask, (err, countTask) => {
+                                        
                                         if (err) callback(err);
                                         else {
-                                            let count = result['COUNT(*)'];
-                                            console.log(count);
+                                            let count = countTask['COUNT(*)'];
+
                                             if (count === 1) {
-                                                this.deleteTaskTag(idTag, (err) => {
+
+                                                this.getTagsByTask(idTask, (err, tags) => {
                                                     if (err) callback(err);
+                                                    else {
+
+                                                        tags.forEach(tag => {
+                                                            let idTag = tag.IdTag;
+
+                                                            this.countTags(idTag, (err, countTag) => {
+                                                                if (err) callback(err);
+                                                                else {
+                                                                    count = countTag['COUNT(*)'];
+
+                                                                    if (count === 1) {
+                                                                        this.deleteTag(idTag, (err) => {
+                                                                            if (err) callback(err);
+                                                                        });
+                                                                    }
+                                                                }
+                                                            });
+                                                        });
+
+                                                        this.deleteTask(idTask, (err) => {
+                                                            if (err) callback(err);
+                                                        });
+                                                    }
                                                 });
-                                                this.deleteTag(idTag, (err) => {
-                                                    if (err) callback(err);
-                                                });
-                                            } 
+                                            }
+                                            daoUsers.deleteTask(idUser, idTask, (err) => {
+                                                if (err) callback(err);
+                                            });
                                         }
                                     });
-
                                 });
-                            });
-
-                            const sql = "DELETE FROM UsersTasks WHERE EXISTS ( SELECT * FROM Users WHERE UsersTasks.IdUser = Id AND Email = ? AND UsersTasks.Done = 1) ";
-
-                            connection.query(sql, [email], function(err, rows) {
-                                connection.release();
-                                if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
-                                else callback(null);
-                            });
+                            }
                         });
+                        callback(null);
                     }
                 });
             }
