@@ -1,69 +1,21 @@
 "use strict"
 
-const mysql = require("mysql");
-const config = require("./config.js");
-const DAOUsers = require("./DAOUsers.js");
+const config = require("./config");
 const DAOTasks = require("./DAOTasks");
+const utils = require("./utils");
+const path = require("path");
+const mysql = require("mysql");
+const express = require("express");
+const bodyParser = require("body-parser");
+const fs = require("fs");
 
-const pool = mysql.createPool({
-    host: config.host,
-    user: config.user,
-    password: config.password,
-    database: config.database
-});
+const app = express();
 
-let daoUsers = new DAOUsers(pool);
-let daoTasks = new DAOTasks(pool);
+const pool = mysql.createPool(config.mysqlConfig);
 
-//DAO User
-//daoUsers.isUserCorrect("aitor.tilla@ucm.es", "aitor", cb_isUserCorrect);
-//daoUsers.isUserCorrect("usuario@ucm.es", "mipass", cb_isUserCorrect);
+const daoTasks = new DAOTasks(pool);
 
-function cb_isUserCorrect(err, result) {
-    if (err) console.log(err.message);
-    else if (result) console.log("Usuario y contraseña correctos");
-    else console.log("Usuario y/o contraseña incorrectos");
-}
-
-//daoUsers.getUserImageName("aitor.tilla@ucm.es", cb_getUserImageName);
-//daoUsers.getUserImageName("usuario@ucm.es", cb_getUserImageName);
-
-function cb_getUserImageName(err, result) {
-    if (err) console.log(err.message);
-    else console.log("Nombre de la imagen del usuario: " + result);
-}
-
-// DAO Task
-//daoTasks.getAllTasks("aitor.tilla@ucm.es", cb_getAllTasks);
-
-function cb_getAllTasks(err, result) {
-    if (err) console.log(err.message);
-    else console.log(result);
-}
-
-let task = {
-    text: "Comer carne",
-    done: false,
-    tags: ["Comida", "Carne"]
-}
-
-//daoTasks.insertTask("aitor.tilla@ucm.es", task, cb_insertTask);
-
-function cb_insertTask(err, result) {
-    if (err) console.log(err.message);
-    else console.log("Tarea insertada");
-}
-
-//daoTasks.markTaskDone(10, cb_markTaskDone);
-
-function cb_markTaskDone(err) {
-    if (err) console.log(err.message);
-    else console.log("Tareas marcadas como hecha");
-}
-
-daoTasks.deleteCompleted("aitor.tilla@ucm.es", cb_deleteCompleted);
-
-function cb_deleteCompleted(err) {
-    if (err) console.log(err.message);
-    else console.log("Tareas eliminadas");
-}
+app.listen(3000, (err) => {
+    if (err) console.log("Error al iniciar el servidor");
+    else console.log("Servidor escuchando por el puerto 3000");
+})
