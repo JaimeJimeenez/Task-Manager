@@ -21,7 +21,27 @@ class DAOTasks {
                         connection.query(sql, [idUser], (err, rows) => {
                             connection.release();
                             if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
-                            else callback(null, rows);
+                            else {
+                                let actId = 0;
+                                let tasks = [];
+                                let task = { };
+                                let tags = [];
+
+                                rows.forEach(row => {
+                                    if (row.Id !== actId) {
+                                        task = {};
+                                        task.Id = row.Id;
+                                        task.Done = row.Done;
+                                        task.Text = row.Text;
+                                        tags = [];
+                                        task.Tags = tags;
+                                        tasks.push(task);
+                                        tags.push(row.Tags);
+                                        actId = row.Id;
+                                    } else tags.push(row.Tags);
+                                })
+                                callback(null, tasks);
+                            } 
                         });
 
                     } 
