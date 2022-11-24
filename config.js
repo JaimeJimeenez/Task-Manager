@@ -6,7 +6,7 @@ module.exports = {
         host: "localhost",
         user: "root",
         password: "",
-        database: "TasksManager"
+        database: "Tasks Manager"
     },
 
     port: 3000

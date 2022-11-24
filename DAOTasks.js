@@ -178,24 +178,34 @@ class DAOTasks {
                                 });
 
                                 task.tags.forEach((tag) => {
-                                    this.insertTag(tag, (err, newTag) => {
+                                    
+                                    // Check if the tag already exists
+                                    this.getTag(tag, (err, result) => {
                                         if (err) console.log(err);
-                                        else {
-                                            console.log(newTag.insertId);
-                                            this.insertTaskTag(idTask, newTag.insertId, (err) => {
+                                        else if (result === undefined) 
+                                            this.insertTag(tag, (err, newTag) => {
                                                 if (err) console.log(err);
+                                                else 
+                                                    this.insertTaskTag(idTask, newTag.insertId, (err) => {
+                                                        if (err) console.log(err);
+                                                    });
                                             });
-                                        }
+                                        else this.insertTaskTag(idTask, result.Id, (err) => {
+                                            if (err) console.log(err);
+                                        })
                                     });
                                 });
                             }
                         });
+                        callback(null);
                     }
                 });
             }
         });
     }
 
+
+    // Mark Task Done
     markTaskDone(idTask, callback) {
         this.pool.getConnection(function(err, connection) {
 
@@ -212,6 +222,7 @@ class DAOTasks {
         });
     }
 
+    // Deleted Completed
     countTags(idTag, callback) {
         this.pool.getConnection((err, connection) => {
             if (err) callback(new Error("Error de conexión en la base de datos: " + err.message));

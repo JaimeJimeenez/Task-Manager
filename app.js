@@ -40,7 +40,9 @@ app.get("/", (request, response) => {
 app.get("/tasks", (request, response) => {
     daoTasks.getAllTasks(user, (err, rows) => {
         if (err) console.log(err);
-        else response.render("tasks", { tasks : rows });
+        else response.render("tasks", { 
+            tasks : rows 
+        });
     }); 
 });
 
@@ -60,7 +62,6 @@ app.get("/finish/:id", (request, response) => {
     daoTasks.markTaskDone(request.params.id, (err) => {
         if (err) console.log(err);
         else response.redirect("/tasks");
-        
     });
 });
 

@@ -35,7 +35,7 @@
                         
                         <div class = "ms-3" id = "user">
                             <div class = "bg-primary" id = "name">
-                                <h6> Nombre usuario </h6>
+                                <h6> usuario </h6>
                             </div>
                             <div id = "logout">
                                 <button type = "button" class = "btn btn-secondary"> 
@@ -54,7 +54,7 @@
             <ul id = "tasksList">
                 
                 <% tasks.forEach((task) => { %>
-                    <% if (task.Done) { %>
+                    <% if (task.Done) { %> 
 
                         <li class = "row justify-content-center align-items-center bg-light" id = "allTask">
                             <span class = "col col-sm-4 col-md-4 col-xl-4 align-items-center justify-content-center" id = "done">
@@ -97,7 +97,7 @@
                     </button>
                 </span>
 
-                <span class = "offset-md-4 col col-sm col-md col-xl p-3" id = "addTask">
+                <span class = "offset-md col col-sm col-md col-xl p-3" id = "addTask">
                     <form method = "POST" action = "/addTask">
                         <input type = "text" placeholder = "New Task" name = "newTask">
                         <button type = "submit" class = "btn btn-primary">Add Task </button>
