@@ -30,7 +30,7 @@ const pool = mysql.createPool(config.mysqlConfig);
 // Create a DAOTasks instance
 const daoTasks = new DAOTasks(pool);
 
-const user = "aitor.tilla@ucm.es";
+const user = "felipe.lotas@ucm.es";
 
 app.get("/", (request, response) => {
     response.status(200);
@@ -49,7 +49,7 @@ app.get("/tasks", (request, response) => {
 app.post("/addTask", (request, response) => {
     response.status(200);
     let task = utils.createTask(request.body.newTask);
-    
+    console.log(task);
     if (task.text.length !== 0) 
         daoTasks.insertTask(user, task, (err) => {
             if (err) console.log(err);
@@ -72,6 +72,7 @@ app.get("/deletedCompleted", (request, response) => {
         if (err) console.log(err);
         else response.redirect("/tasks");
     });
+
 });
 
 // Initiate the server

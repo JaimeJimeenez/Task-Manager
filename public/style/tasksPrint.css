@@ -7,6 +7,7 @@ header {
 }
 
 ul:before {
+    margin-left: 0;
     content: "Tareas";
     font-size: 18px;
 }
