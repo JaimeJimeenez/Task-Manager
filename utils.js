@@ -12,13 +12,10 @@ function getToDoTasks(tasks) {
     let unfinalished = tasks.filter(n => !n.done);
     return unfinalished.map(n => n.text);
 }
-console.log(getToDoTasks(tasksList));
 
 function findByTag(tasks, tag) { return tasks.filter(n => n.tags.some(x => x === tag)); }
-console.log(findByTag(tasksList, "personal"));
 
 function findByTags(tasks, tags) { return tasks.filter(n => tags.some(x => n.tags.includes(x))); }
-console.log(findByTags(tasksList, [ "personal", "practica"]));
 
 function countDone(tasks) {
     return tasks.reduce((count, n) => {
@@ -26,7 +23,6 @@ function countDone(tasks) {
         return count;
     }, 0);
 }
-console.log(countDone(tasksList));
 
 function createTask(input) {
     let array = input.split(' ');
@@ -42,9 +38,14 @@ function createTask(input) {
     return {
         text: text,
         tags: tags,
+        done: false
     };
 }
 
-console.log(createTask("Ir al medico @personal @salud"));
-console.log(createTask("@universidad @practica Preparar practicas TP"));
-console.log(createTask("Ir a @deporte entrenar"));
+module.exports = {
+    getToDoTasks,
+    findByTag,
+    findByTags,
+    countDone,
+    createTask
+};

@@ -1,69 +1,80 @@
 "use strict"
 
- const mysql = require("mysql");
- const config = require("./config.js");
- const DAOUsers = require("./DAOUsers.js");
- const DAOTasks = require("./DAOTasks");
+const config = require("./config");
+const DAOTasks = require("./DAOTasks");
+const utils = require("./utils");
 
- const pool = mysql.createPool({
-    host: config.mysqlConfig.host,
-    user: config.mysqlConfig.user,
-    password: config.mysqlConfig.password,
-    database: config.mysqlConfig.database
+const path = require("path");
+const mysql = require("mysql");
+const express = require("express");
+const bodyParser = require("body-parser");
+const morgan = require("morgan");
+
+const fs = require("fs");
+
+// Create Server
+const app = express();
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+app.use(bodyParser.urlencoded( { extended: false }));
+app.use(express.static(path.join(__dirname, "public")));
+
+// Using morgan
+app.use(morgan("dev"));
+
+// Create pool's connections to the database
+const pool = mysql.createPool(config.mysqlConfig);
+
+// Create a DAOTasks instance
+const daoTasks = new DAOTasks(pool);
+
+const user = "aitor.tilla@ucm.es";
+
+app.get("/", (request, response) => {
+    response.status(200);
+    response.redirect("/tasks");
 });
 
-let daoUsers = new DAOUsers(pool);
-let daoTasks = new DAOTasks(pool);
+app.get("/tasks", (request, response) => {
+    daoTasks.getAllTasks(user, (err, rows) => {
+        if (err) console.log(err);
+        else response.render("tasks", { tasks : rows });
+    }); 
+});
 
-//DAO User
-//daoUsers.isUserCorrect("aitor.tilla@ucm.es", "aitor", cb_isUserCorrect);
-//daoUsers.isUserCorrect("usuario@ucm.es", "mipass", cb_isUserCorrect);
+app.post("/addTask", (request, response) => {
+    response.status(200);
+    let task = utils.createTask(request.body.newTask);
+    
+    if (task.text.length !== 0) 
+        daoTasks.insertTask(user, task, (err) => {
+            if (err) console.log(err);
+            else response.redirect("/tasks");
+        });
+});
 
-function cb_isUserCorrect(err, result) {
-    if (err) console.log(err.message);
-    else if (result) console.log("Usuario y contraseña correctos");
-    else console.log("Usuario y/o contraseña incorrectos");
-}
+app.get("/finish/:id", (request, response) => {
+    response.status(200);
+    daoTasks.markTaskDone(request.params.id, (err) => {
+        if (err) console.log(err);
+        else response.redirect("/tasks");
+        
+    });
+});
 
-//daoUsers.getUserImageName("aitor.tilla@ucm.es", cb_getUserImageName);
-//daoUsers.getUserImageName("usuario@ucm.es", cb_getUserImageName);
+app.get("/deletedCompleted", (request, response) => {
+    response.status(200);
 
-function cb_getUserImageName(err, result) {
-    if (err) console.log(err.message);
-    else console.log("Nombre de la imagen del usuario: " + result);
-}
+    daoTasks.deleteCompleted(user, (err) => {
+        if (err) console.log(err);
+        else response.redirect("/tasks");
+    });
+});
 
-// DAO Task
-daoTasks.getAllTasks("aitor.tilla@ucm.es", cb_getAllTasks);
-
-function cb_getAllTasks(err, result) {
-    if (err) console.log(err.message);
-    else console.log(result);
-}
-
-let task = {
-    text: "Comer tortilla",
-    done: false,
-    tags: ["Cena", "Tortilla"]
-}
-
-//daoTasks.insertTask("felipe.lotas@ucm.es", task, cb_insertTask);
-
-function cb_insertTask(err, result) {
-    if (err) console.log(err.message);
-    else console.log("Tarea insertada");
-}
-
-//daoTasks.markTaskDone(11, cb_markTaskDone);
-
-function cb_markTaskDone(err) {
-    if (err) console.log(err.message);
-    else console.log("Tareas marcadas como hecha");
-}
-
-//daoTasks.deleteCompleted("aitor.tilla@ucm.es", cb_deleteCompleted);
-
-function cb_deleteCompleted(err) {
-    if (err) console.log(err.message);
-    else console.log("Tareas eliminadas");
-}
+// Initiate the server
+app.listen(config.port, (err) => {
+    if (err) console.log("ERROR al iniciar el servidor");
+    else console.log("Servidor escuchando en el puerto " + config.port);
+});

@@ -1,148 +1,78 @@
-html {
-    height: 100%;
-}
-
-header {
-    margin-top: 20px;
-    height: 3rem;
-    position: sticky;
-}
-
-#init {
-    border: 2px solid rgba(0, 0, 0, 0.282);
-    margin-left: 0.5%;
-    margin-right: 0.5%;
-}
-
-.navbar {
-    border: 2px solid rgba(0, 0, 0, 0.282);
-}
-
-.logoImage {
-    margin-left: 20px;
-}
-
 #userImage {
-    align-items: center;
+    margin-top: 15px;
 }
 
-#username {
-    margin-top: 5px;
-    text-align: center;
+#user {
     color: white;
+    text-align: center;
 }
 
-.userImage {
-    border: 2px solid rgb(57, 74, 128)
+#name {
+    padding: 5px;
+    border: 2px solid lightgray;
+    border-radius: 10px;
+    margin-bottom: 15px;
 }
 
-body {
-    background: linear-gradient(to right bottom, #536976, #292E49);
-}
-
-.tasksList {
-    margin-top: 10rem;
-    height: 100%;
-}
-
-a {
+#logout {
+    color: white;
     text-decoration: none;
 }
 
-#disconnect {
-    border: 2px solid rgb(57, 74, 128);
-    background: grey;
-    color: lightgray;
-    width: 60%;
-    margin-left: 20%;
-    margin-bottom: 10px;
+#tasksList {
+    margin-top: 10rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    padding: 1rem;
 }
 
-.rowTask {
-    margin-top: 25px;
-    margin-left: 25%;
-    margin-right: 25%;
-    border: 2px solid rgb(57, 74, 128);
-    background-color: rgba(0, 0, 0, 0.207);
-    animation: 10s padding;
-}
-
-.end {
-    text-decoration: line-through;
-}
-
-.task {
-    font-size: large;
-    width: auto;
-    color: black;
-}
-
-.task:hover {
-    color: blue;
-}
-
-.tags {
-    border: 2px solid rgb(57, 74, 128);
-    padding: 8px;
+#allTask {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 2px solid lightgray;
     border-radius: 10px;
-    margin-left: 12px;
-    color: white;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, 
+    rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px,
+    rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
-.buttonFin {
+#task {
     text-align: center;
-    width: 12%;
-    border: 2px solid rgb(57, 74, 128);
-    float: right;
+}
+
+#tags {
+    color: white;
+    text-align: center;
+    border: 2px solid lightgray;
+    border-radius: 10px;
     padding: 5px;
 }
 
-.buttonFin:hover {
-    background-color: red;
-}
-
-.finalished {
-    color: white;
-}
-
-.finalished:hover {
-    color: black;
-}
-
-#deleteAll {
-    float: left;
-    border: 2px solid rgb(57, 74, 128);
-    padding: 2px;
-    color: white;
-}
-
-#deleteAll:hover {
-    background-color: red;
-    color: black;
-}
-
-#newTask {
-    float: right;
-    border: 2px solid rgb(57, 74, 128);
-    padding: 2px;
-    color: white;
-}
-
-#newTask:hover {
-    background-color: green;
-    color: black;
-}
-
-button {
-    border:none;
-    cursor: pointer;
+#finalished {
     text-decoration: none;
-    background-color: rgba(18, 139, 18, 0.492);
+    color: white;
 }
 
-.rowOptions {
-    margin-top: 30px;
-    margin-left: 26%;
-    margin-right: 24%;
-    height: 4em;
+#done {
+    text-decoration: line-through;
+}
+
+#options {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 4rem;
+}
+
+#delete {
+    text-decoration: none;
+    color: white;
+}
+
+#addTask {
+    border: 2px solid lightgray;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }

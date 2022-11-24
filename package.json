@@ -1,8 +1,8 @@
 {
   "name": "task-manager",
   "version": "1.0.0",
-  "description": "Task Manager Web Application",
-  "main": "main.js",
+  "description": "Tasks Manager Application for Web Applications Subject",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,16 +12,16 @@
   },
   "keywords": [
     "AW",
-    "Task-Manager",
-    "Web",
+    "EJS",
     "HTML",
-    "CSS",
+    "UCM",
     "JS",
-    "Node",
-    "Express"
+    "MYSQL",
+    "Express",
+    "Node"
   ],
-  "author": "Jaime Jiménez Nieto, Diego Martinez Moro",
-  "license": "ISC",
+  "author": "Jaime Jiménez Nieto",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Jimmyjimmenez/Task-Manager/issues"
   },
@@ -30,6 +30,9 @@
     "body-parser": "^1.20.1",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
-    "mysql": "^2.18.1"
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
+    "path": "^0.12.7",
+    "static": "^2.0.0"
   }
 }
