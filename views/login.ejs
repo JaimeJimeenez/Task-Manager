@@ -17,11 +17,9 @@
 
             <div class = "row">
                 <nav class = "navbar navbar-expand-sm navbar-dark bg-dark">
-
                     <a href = "" class = "navbar-brand ms-4">
                         <img src = "images/icons/favicon-32x32.png" alt = "Tasks Manager Logo">
                     </a>
-
                 </nav>
             </div>
         </header>
@@ -32,7 +30,7 @@
         <div class = "row align-items-center justify-content-center">
             
             <div class = "col col-sm-6 col-md-6 col-xl-6 p-5 w-25" id = "login">
-                <form method = "POST" action = "/login">
+                <form method = "POST" action = "login">
 
                     <div class = "form-group w-100">
                         <label for = "email" class = "form-label"> Email: </label>
@@ -44,11 +42,17 @@
                         <input type = "password" class = "form-control" placeholder = "Password" name = "password">
                     </div>
                     
+                    <div class = "row mt-2">
+                        <% if (errorMsg !== null) {%>
+                            <h6 style = "color: red"> <%= errorMsg %> </h6>
+                        <% } %>
+                    </div>
+
                     <button type = "submit" class = "btn btn-primary mt-4" id = "btn"> Log in </button>
                 </form>
             </div>
 
-        </div>
+        </div> 
     </section>
 
 

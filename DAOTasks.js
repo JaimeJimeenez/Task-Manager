@@ -39,7 +39,7 @@ class DAOTasks {
                                         tags.push(row.Tags);
                                         actId = row.Id;
                                     } else tags.push(row.Tags);
-                                })
+                                });
                                 callback(null, tasks);
                             } 
                         });
@@ -197,9 +197,9 @@ class DAOTasks {
                                 });
                             }
                         });
-                        callback(null);
                     }
                 });
+                callback(null);
             }
         });
     }
@@ -356,9 +356,9 @@ class DAOTasks {
                                 });
                             }
                         });
-                        callback(null);
                     }
                 });
+                callback(null);
             }
         });
     }

@@ -93,7 +93,7 @@ class DAOUsers {
                     connection.release();
                     if (err) callback(new Error("Error en la consulta"));
                     else if (row.length === 0) callback(new Error("No existe ese usuario"));
-                    else callback(row);
+                    else callback(null, row[0].Img);
                 });
             }
         });
