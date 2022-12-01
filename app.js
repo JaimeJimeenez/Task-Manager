@@ -12,7 +12,6 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const morgan = require("morgan");
 
-
 // Middleware session
 const session = require("express-session");
 const mysqlSession = require("express-mysql-session");

@@ -134,6 +134,7 @@ class DAOTasks {
                 const sql = "INSERT INTO UsersTasks (IdUser, IdTask, Done) VALUES (?, ?, false);";
 
                 connection.query(sql, [idUser, idTask], (err) => {
+                    connection.release();
                     if (err) console.log(new Error("Error de acceso a la base de datos: " + err.message));
                     else callback(null);
                 });
@@ -148,6 +149,7 @@ class DAOTasks {
                 const sql = "INSERT INTO TasksTags (IdTask, IdTag) VALUES (?, ?);";
 
                 connection.query(sql, [idTask, idTag], (err) => {
+                    connection.release();
                     if (err) console.log(new Error("Error de acceso a la base de datos: " + err.message));
                 });
             }
@@ -290,6 +292,7 @@ class DAOTasks {
                 const sql = "DELETE FROM Tasks WHERE Id = ?;";
 
                 connection.query(sql, [idTask], (err) => {
+                    connection.release();
                     if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
                     else callback(null);
                 });

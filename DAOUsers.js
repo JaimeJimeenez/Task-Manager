@@ -106,6 +106,7 @@ class DAOUsers {
                 const sql = "DELETE FROM UsersTasks WHERE IdUser = ? AND IdTask = ?;";
 
                 connection.query(sql, [idUser, idTask], (err) => {
+                    connection.release();
                     if (err) callback(new Error("Error de acceso a la base de datos: " + err.message));
                     else callback(null);
                 });

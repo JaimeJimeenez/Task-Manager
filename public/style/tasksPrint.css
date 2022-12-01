@@ -6,61 +6,69 @@ header {
     font-family: Helvetica, Arial, sans-serif;
 }
 
-ul:before {
+#tasksList {
+    
+    list-style-type: circle;
+    content: "Oye";
+}
+
+#tasksList:before {
     margin-left: 0;
-    content: "Tareas";
+    width: 200px;
+    content: "Tareas:";
     font-size: 18px;
 }
 
-.rowTask {
+#allTask {
     border: none;
+    box-shadow: none;
     margin-left: 0;
-    margin-top:0;
+    justify-content:flex-start;
+    width: auto;
 }
 
-.end {
-    margin-left: 5%;
-}
-
-.task {
+#task {
+    align-items: none;
+    justify-content: none;
     color: black;
     font-size: 12px;
+    width: 1000px;
 }
 
-.task::after {
+#done {
+    width: auto;
+    text-decoration: line-through;
+    margin-left: 0;
+    align-items: initial;
+    justify-content: start;
+}
+
+#task::after {
     content: ":";
 }
 
-.tags {
-    border: none;
-    padding: 0;
+#tags {
+    color: black;
     font-size: 12px;
+    border: none;
+    width: 1000px;
+    background-color: black;
+    display: inline-block;
 }
 
-.tags:before {
+#tags::before {
     content: "(";
 }
 
-.tags:after {
-    content: ")"
+#tags:after {
+    content: ")";
 }
 
-.finalished {
+#btnFin {
     display: none;
 }
 
-.buttonFin {
+#options {
     display: none;
 }
 
-.deleteAll {
-    display: none;
-}
-
-.newTask {
-    display: none;
-}
-
-.rowOptions {
-    display: none;
-}
